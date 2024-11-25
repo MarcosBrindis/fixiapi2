@@ -18,8 +18,6 @@ async def read_user(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    if current_user["user_id"] != user_id and current_user["tipo_usuario"] != "Admin":
-        raise HTTPException(status_code=403, detail="Not authorized to access this user data")
     user = await get_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -33,8 +31,6 @@ async def read_users(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    if current_user["tipo_usuario"] != "Admin":
-        raise HTTPException(status_code=403, detail="Not authorized to access this resource")
     users = await get_users(db, skip=skip, limit=limit)
     return users
 

@@ -90,14 +90,6 @@ async def read_one(
     if not perfil:
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
     # Obtener usuario logueado
-    user_id = current_user.get("user_id")
-    user = await get_user(db, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    # Verificar permisos
-    user_perfil_id = user.perfil_id if hasattr(user, 'perfil_id') else None
-    if not user_perfil_id or (str(perfil["_id"]) != user_perfil_id and user.tipo_usuario != "Admin"):
-        raise HTTPException(status_code=403, detail="No autorizado para ver este perfil")
     return perfil
 
 
@@ -194,10 +186,6 @@ async def update_perfil(
     return updated
 
 
-# Obtener todos los perfiles
-@router.get("/", response_model=List[dict])
-async def read_all():
-    return await get_all_perfiles()
 
 
 # Eliminar perfil
